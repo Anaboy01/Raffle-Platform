@@ -1,4 +1,5 @@
 import React from 'react'
+import "./config/connection"
 import Home from './pages/Home'
 import { Route, Routes } from 'react-router-dom'
 import Raffle from './pages/Raffle'

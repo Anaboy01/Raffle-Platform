@@ -41,29 +41,30 @@ const Navigation = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="hidden md:flex items-center space-x-8"
           >
-            <Link href="/" className="text-gray-300 hover:text-white transition-colors relative group">
+            <Link to="/" className="text-gray-300 hover:text-white transition-colors relative group">
               Home
               <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
             </Link>
-            <Link href="/raffle" className="text-gray-300 hover:text-white transition-colors relative group">
+            <Link to="/raffle" className="text-gray-300 hover:text-white transition-colors relative group">
               Raffle
               <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
             </Link>
-            <Link href="/how-it-works" className="text-gray-300 hover:text-white transition-colors relative group">
+            <Link to="/how-it-works" className="text-gray-300 hover:text-white transition-colors relative group">
               How It Works
               <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
             </Link>
-            <Link href="/winners" className="text-gray-300 hover:text-white transition-colors relative group">
+            <Link to="/winners" className="text-gray-300 hover:text-white transition-colors relative group">
               Winners
               <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
             </Link>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
             >
-              Connect Wallet
+               <appkit-button />
             </motion.button>
+           
           </motion.div>
 
           {/* Mobile Menu Button */}

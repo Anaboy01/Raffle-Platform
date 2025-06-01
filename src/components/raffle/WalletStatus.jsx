@@ -14,9 +14,9 @@ const WalletStatus = ({ isConnected, userAddress, onConnect }) => {
         </div>
         <button
           onClick={onConnect}
-          className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
         >
-          {isConnected ? "Disconnect" : "Connect Wallet"}
+          <appkit-button/>
         </button>
       </div>
     </div>

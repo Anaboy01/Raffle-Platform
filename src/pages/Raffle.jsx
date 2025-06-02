@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
+
+
 import CurrentRaffle from "../components/raffle/CurrentRaffle";
 import WalletStatus from "../components/raffle/WalletStatus";
 import ParticipantsLists from "../components/raffle/ParticipantsLists";
@@ -141,7 +141,6 @@ const Raffle = () => {
       />
 
       <div className="relative z-10">
-        <Navigation />
 
         <motion.div
           variants={containerVariants}
@@ -248,7 +247,6 @@ const Raffle = () => {
           </motion.div>
         </motion.div>
 
-        <Footer />
       </div>
     </motion.div>
   )

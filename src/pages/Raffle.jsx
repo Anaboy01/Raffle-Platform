@@ -25,7 +25,7 @@ const Raffle = () => {
   // Mock data for demonstration
   useEffect(() => {
     // Simulate some existing raffle data
-    setRaffleResults([
+    setRaffleResults([ 
       {
         raffleId: 1,
         winner: "0x1234...5678",

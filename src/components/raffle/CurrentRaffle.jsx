@@ -7,11 +7,14 @@ const CurrentRaffle = ({
   entryFee,
   participants,
   raffleCount,
-  isConnected,
+  userAddress,
+  contractOwner,
   loading,
   onEnterRaffle,
   onCloseRaffle,
 }) => {
+
+  const isOwner = userAddress.toLowerCase() === contractOwner
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,10 +27,10 @@ const CurrentRaffle = ({
 
       <div className="space-y-4">
         {[
-          { label: "Status:", value: raffleOpen ? "Open" : "Closed", isStatus: true },
-          { label: "Entry Fee:", value: `${entryFee} ETH` },
+          { label: "Status:", value: raffleOpen ? "Open" : "Closed", isStatus: raffleOpen },
+          { label: "Entry Fee:", value: `${entryFee} Celo` },
           { label: "Participants:", value: participants.length },
-          { label: "Raffle #:", value: raffleCount + 1 },
+          { label: "Raffle #:", value: raffleCount },
         ].map((item, index) => (
           <motion.div
             key={index}
@@ -59,9 +62,10 @@ const CurrentRaffle = ({
           transition={{ delay: 0.4, duration: 0.6 }}
           className="mt-6 space-y-4"
         >
-          <motion.button
+          {!isOwner && (
+            <motion.button
             onClick={onEnterRaffle}
-            disabled={!isConnected || loading}
+            disabled={!raffleOpen || isOwner}
             whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(34, 197, 94, 0.3)" }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
@@ -70,11 +74,13 @@ const CurrentRaffle = ({
               animate={loading ? { opacity: [1, 0.5, 1] } : { opacity: 1 }}
               transition={{ duration: 1, repeat: loading ? Number.POSITIVE_INFINITY : 0 }}
             >
-              {loading ? "Entering..." : `Enter Raffle (${entryFee} ETH)`}
+              {loading ? "Entering..." : `Enter Raffle (${entryFee} Celo)`}
             </motion.span>
           </motion.button>
+          )}
 
-          <motion.button
+         {isOwner && (
+           <motion.button
             onClick={onCloseRaffle}
             disabled={participants.length === 0 || loading}
             whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(249, 115, 22, 0.3)" }}
@@ -88,6 +94,7 @@ const CurrentRaffle = ({
               {loading ? "Closing..." : "Close Raffle & Select Winner"}
             </motion.span>
           </motion.button>
+         )}
         </motion.div>
       )}
     </motion.div>

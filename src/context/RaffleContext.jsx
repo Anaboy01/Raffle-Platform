@@ -264,3 +264,7 @@ export const RaffleContextProvider = ({ children }) => {
     </RaffleContext.Provider>
   );
 };
+
+export const useRaffle = () => {
+  return useContext(RaffleContext)
+}

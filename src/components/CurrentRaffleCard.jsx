@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
+import { useRaffle } from "../context/RaffleContext";
+import { button } from "framer-motion/client";
+
+
 
 
 
 const CurrentRaffleCard = () => {
+
+  const {raffleInfo, entryFee} = useRaffle()
+
+  
    const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -68,9 +76,9 @@ const CurrentRaffleCard = () => {
 
               <div className="space-y-3 mb-6">
                 {[
-                  { label: "Entry Fee:", value: "0.01 ETH" },
-                  { label: "Current Participants:", value: "47" },
-                  { label: "Status:", value: "Open", isStatus: true },
+                  { label: "Entry Fee:", value: entryFee },
+                  { label: "Current Participants:", value: raffleInfo.participantCount },
+                  { label: "Status:", value: raffleInfo.status ? "open": "closed", isStatus: raffleInfo.status },
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -87,7 +95,20 @@ const CurrentRaffleCard = () => {
                 ))}
               </div>
 
-              <Link to="/raffle">
+             {!raffleInfo.status ? (
+               <motion.button
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0 20px 40px rgba(34, 197, 94, 0.4)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled
+                  className="px-8 py-3 bg-gradient-to-r cursor-not-allowed from-red-500 to-rose-500 text-white rounded-lg font-semibold hover:from-red-600 hover:to-rose-600 transition-all duration-200"
+                >
+                 Raffle closed
+                </motion.button>
+             ):(
+               <Link to="/raffle">
                 <motion.button
                   whileHover={{
                     scale: 1.05,
@@ -99,6 +120,7 @@ const CurrentRaffleCard = () => {
                   Enter Raffle Now
                 </motion.button>
               </Link>
+             )}
             </motion.div>
 
             <motion.div style={{ x: useTransform(scrollYProgress, [0, 1], [30, -30]) }} className="text-center">
@@ -158,7 +180,7 @@ const CurrentRaffleCard = () => {
                 }}
                 className="text-xl font-semibold text-white mb-2"
               >
-                Cosmic Art Collection #3
+                Cosmic Art Collection #{raffleInfo.id}
               </motion.h3>
 
               <motion.p

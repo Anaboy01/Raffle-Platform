@@ -22,10 +22,6 @@ const RaffleHistory = ({raffleResults}) => {
                   <p className="text-gray-400 text-sm">Winner</p>
                   <p className="text-white font-mono">{formatAddress(result.winner)}</p>
                 </div>
-                <div>
-                  <p className="text-gray-400 text-sm">Participants</p>
-                  <p className="text-white font-semibold">{result.participants}</p>
-                </div>
                 <div className="flex justify-end">
                   <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
                     View NFT

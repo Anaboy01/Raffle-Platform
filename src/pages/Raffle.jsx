@@ -7,54 +7,45 @@ import ParticipantsLists from "../components/raffle/ParticipantsLists";
 import RaffleHistory from "../components/raffle/RaffleHistory";
 import RefundSection from "../components/raffle/RefundSection";
 import { motion } from "framer-motion";
+import { useRaffle } from "../context/RaffleContext";
+import { useAppKitAccount } from "@reown/appkit/react";
+import ProfitWithdraw from "../components/raffle/ProfitWithdraw";
+
+
+
 
 
 
 const Raffle = () => {
   // Mock state - you'll replace these with actual contract calls
-  const [raffleOpen, setRaffleOpen] = useState(true)
-  const [entryFee, setEntryFee] = useState("0.01") // in ETH
-  const [participants, setParticipants] = useState([])
-  const [raffleCount, setRaffleCount] = useState(0)
-  const [raffleResults, setRaffleResults] = useState([])
+ 
+ 
+  const {address, isConnected} = useAppKitAccount();
+ const [raffleCount, setRaffleCount] = useState()
   const [userRefund, setUserRefund] = useState("0")
-  const [isConnected, setIsConnected] = useState(false)
+
+
   const [userAddress, setUserAddress] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // Mock data for demonstration
+  const {participants, entryFee, raffleOpen, raffleInfo, owner, refunds, raffleResults, contractFunds} = useRaffle()
+
+   const isOwner = userAddress.toLowerCase() === owner
+
   useEffect(() => {
-    // Simulate some existing raffle data
-    setRaffleResults([ 
-      {
-        raffleId: 1,
-        winner: "0x1234...5678",
-        tokenId: 1,
-        tokenURI: "https://example.com/token/1",
-        participants: 15,
-      },
-      {
-        raffleId: 2,
-        winner: "0x8765...4321",
-        tokenId: 2,
-        tokenURI: "https://example.com/token/2",
-        participants: 23,
-      },
-    ])
-    setParticipants(["0x1111...1111", "0x2222...2222", "0x3333...3333", "0x4444...4444"])
-    setRaffleCount(2)
-  }, [])
+    setRaffleCount(raffleInfo.id)
+    setUserRefund(refunds)
+    setUserAddress(address)
+  },[raffleInfo, refunds, address])
+
+
+ 
 
   const handleEnterRaffle = async () => {
     setLoading(true)
     // Your web3 integration will go here
     console.log("Entering raffle with fee:", entryFee)
 
-    // Simulate transaction
-    setTimeout(() => {
-      setParticipants((prev) => [...prev, userAddress])
-      setLoading(false)
-    }, 2000)
   }
 
   const handleCloseRaffle = async () => {
@@ -190,20 +181,32 @@ const Raffle = () => {
                 raffleCount={raffleCount}
                 isConnected={isConnected}
                 loading={loading}
+                userAddress={address}
+                contractOwner={owner}
                 onEnterRaffle={handleEnterRaffle}
                 onCloseRaffle={handleCloseRaffle}
               />
             </motion.div>
 
             {/* Refunds */}
+           {isOwner ? (<motion.div variants={itemVariants}>
+              <ProfitWithdraw
+               
+                profit={contractFunds.withdrawableProfit}
+                loading={loading}
+                onWithdrawRefund={handleWithdrawRefund}
+              />
+            </motion.div>):( 
             <motion.div variants={itemVariants}>
               <RefundSection
                 userRefund={userRefund}
                 isConnected={isConnected}
                 loading={loading}
                 onWithdrawRefund={handleWithdrawRefund}
+                userAddress={address}
+                contractOwner={owner}
               />
-            </motion.div>
+            </motion.div>)}
           </div>
 
           {/* Current Participants */}
@@ -221,7 +224,7 @@ const Raffle = () => {
             {[
               { value: raffleResults.length, label: "Completed Raffles" },
               { value: participants.length, label: "Current Participants" },
-              { value: entryFee, label: "Entry Fee (ETH)" },
+              { value: entryFee, label: "Entry Fee (Celo)" },
             ].map((stat, index) => (
               <motion.div
                 key={index}

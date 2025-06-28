@@ -10,6 +10,11 @@ import { motion } from "framer-motion";
 import { useRaffle } from "../context/RaffleContext";
 import { useAppKitAccount } from "@reown/appkit/react";
 import ProfitWithdraw from "../components/raffle/ProfitWithdraw";
+import useEnterRaffle from "../hooks/useEnterRaffle";
+import useWithdrawRefund from "../hooks/useWithdrawRefund";
+import useWithdrawProfit from "../hooks/useWithdrawProfit";
+
+
 
 
 
@@ -23,12 +28,16 @@ const Raffle = () => {
   const {address, isConnected} = useAppKitAccount();
  const [raffleCount, setRaffleCount] = useState()
   const [userRefund, setUserRefund] = useState("0")
+ 
 
 
   const [userAddress, setUserAddress] = useState("")
   const [loading, setLoading] = useState(false)
+  const enterRaffle = useEnterRaffle()
+  const withdrawRefund = useWithdrawRefund()
+  const withdrawProfit = useWithdrawProfit()
 
-  const {participants, entryFee, raffleOpen, raffleInfo, owner, refunds, raffleResults, contractFunds} = useRaffle()
+  const {participants,isAlreadyParticipating, entryFee, raffleOpen, raffleInfo, owner, refunds, raffleResults, contractFunds} = useRaffle()
 
    const isOwner = userAddress.toLowerCase() === owner
 
@@ -36,15 +45,26 @@ const Raffle = () => {
     setRaffleCount(raffleInfo.id)
     setUserRefund(refunds)
     setUserAddress(address)
-  },[raffleInfo, refunds, address])
+   
+  },[raffleInfo, refunds, address, participants])
+
+
+
+
+
 
 
  
 
   const handleEnterRaffle = async () => {
     setLoading(true)
-    // Your web3 integration will go here
-    console.log("Entering raffle with fee:", entryFee)
+    try {
+     await enterRaffle(entryFee)
+    } catch (error) {
+      console.error("Raffle entery error", error)
+    }finally{
+      setLoading(false)
+    }
 
   }
 
@@ -62,24 +82,28 @@ const Raffle = () => {
 
   const handleWithdrawRefund = async () => {
     setLoading(true)
-    // Your web3 integration will go here
-    console.log("Withdrawing refund:", userRefund)
-
-    // Simulate transaction
-    setTimeout(() => {
-      setUserRefund("0")
+    try {
+     await withdrawRefund()
+    } catch (error) {
+      console.error("Refund withdrawal error", error)
+    }finally{
       setLoading(false)
-    }, 2000)
+    }
+    
   }
 
-  const handleWalletConnect = () => {
-    setIsConnected(!isConnected)
-    if (!isConnected) {
-      setUserAddress("0x1234567890123456789012345678901234567890")
-    } else {
-      setUserAddress("")
+  const handleProfitWithdrawal = async () => {
+     setLoading(true)
+    try {
+     await withdrawProfit()
+    } catch (error) {
+      console.error("Profit withdrawal error", error)
+    }finally{
+      setLoading(false)
     }
   }
+
+  
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -168,7 +192,7 @@ const Raffle = () => {
 
           {/* Wallet Status */}
           <motion.div variants={itemVariants}>
-            <WalletStatus isConnected={isConnected} userAddress={userAddress} onConnect={handleWalletConnect} />
+            <WalletStatus isConnected={isConnected} userAddress={userAddress} />
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -185,6 +209,7 @@ const Raffle = () => {
                 contractOwner={owner}
                 onEnterRaffle={handleEnterRaffle}
                 onCloseRaffle={handleCloseRaffle}
+                participating={isAlreadyParticipating}
               />
             </motion.div>
 
@@ -194,7 +219,7 @@ const Raffle = () => {
                
                 profit={contractFunds.withdrawableProfit}
                 loading={loading}
-                onWithdrawRefund={handleWithdrawRefund}
+                onWithdrawRefund={handleProfitWithdrawal}
               />
             </motion.div>):( 
             <motion.div variants={itemVariants}>

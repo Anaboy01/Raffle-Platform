@@ -21,7 +21,8 @@ const RaffleContext = createContext({
   refunds: "",
   raffleResults: [],
   contractFunds: [],
-  owner:""
+  owner:"",
+  isAlreadyParticipating: false,
 });
 
 export const RaffleContextProvider = ({ children }) => {
@@ -33,6 +34,7 @@ export const RaffleContextProvider = ({ children }) => {
   const [participants, setParticipants] = useState([]);
   const [contractFunds, setContractFunds] = useState();
   const [owner, setOwner] = useState("");
+  const [isAlreadyParticipating, setIsAlreadyParticipating] = useState(false);
 
   const readOnlyRaffleContract = useContractInstance();
   const { signer, provider } = useSignerOrProvider();
@@ -195,6 +197,17 @@ export const RaffleContextProvider = ({ children }) => {
  },[getOwner])
 
 
+ useEffect(() => {
+  const found = participants.some(addr => addr.toLowerCase() === address.toLowerCase());
+    if(found){
+      setIsAlreadyParticipating(true)
+    }else{
+      setIsAlreadyParticipating(false)
+    }
+
+ }, [address, participants])
+
+
   useEffect(() => {
     if  (!readOnlyRaffleContract || !address) return;
 
@@ -257,7 +270,8 @@ export const RaffleContextProvider = ({ children }) => {
         refunds,
         raffleResults,
         contractFunds,
-        owner
+        owner,
+        isAlreadyParticipating
       }}
     >
       {children}

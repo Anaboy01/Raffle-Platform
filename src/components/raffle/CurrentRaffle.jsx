@@ -12,6 +12,7 @@ const CurrentRaffle = ({
   loading,
   onEnterRaffle,
   onCloseRaffle,
+  participating
 }) => {
 
   const isOwner = userAddress.toLowerCase() === contractOwner
@@ -65,7 +66,7 @@ const CurrentRaffle = ({
           {!isOwner && (
             <motion.button
             onClick={onEnterRaffle}
-            disabled={!raffleOpen || isOwner}
+            disabled={!raffleOpen || isOwner || participating}
             whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(34, 197, 94, 0.3)" }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"

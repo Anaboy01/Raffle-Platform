@@ -1,43 +1,20 @@
 import { createAppKit } from '@reown/appkit/react'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
-import { baseSepolia, defineChain, sepolia } from '@reown/appkit/networks'
+import { celo, celoAlfajores, defineChain } from "@reown/appkit/networks";
 
 
-// 1. Get projectId
 
 
 
 const projectId =import.meta.env.VITE_APPKIT_PROJECT_ID;
 
-const crossFiTestnet = defineChain({
-  id: 4157,
-  caipNetworkId: "eip155:4157",
-  chainNamespace: "eip155",
-  name: "CrossFi Testnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "XFI",
-    symbol: "XFI",
-  },
-  rpcUrls: {
-    default: {
-      http: [import.meta.env.VITE_APP_CROSSFI_RPC_URL],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "XFI Scan",
-      url: import.meta.env.VITE_APP_CROSSFI_EXPLORER_URL,
-    },
-  },
-  contracts: {
-    
-  },
-});
+// set network
+
+// const crossFiTestnet = defineChain({});
 
 
 
-// 3. Create a metadata object - optional
+//  Create a metadata object - optional
 const metadata = {
   name: 'My Website',
   description: 'My Website description',
@@ -45,23 +22,34 @@ const metadata = {
   icons: ['https://avatars.mywebsite.com/']
 }
 
-// 4. Create a AppKit instance
-createAppKit({
+
+
+// Create a AppKit instance
+export const appkit = createAppKit({
   adapters: [new EthersAdapter()],
-  networks: [crossFiTestnet],
+  networks: [celoAlfajores],
   chainImages: {
-    [crossFiTestnet.id]:
-      "https://s2.coinmarketcap.com/static/img/coins/64x64/26202.png",
+    [celo.id]: "https://cryptologos.cc/logos/celo-celo-logo.png?v=040",
   },
   metadata,
   projectId,
+  allowUnsupportedChain: false,
+  allWallets: "SHOW",
+  defaultNetwork: celoAlfajores,
+  enableEIP6963: true,
   themeVariables: {
+    "--w3m-color-mix": "#1c1917",
     "--w3m-accent": "#00000000",
+    "--w3m-color-mix-strength": 40,
+    "--wcm-accent-color": "#FFFFFF",
     "--w3m-border-radius-master":"none"
   },
+  themeMode: "dark",
   features: {
-    analytics: true
+    analytics: true,
+    allWallets: true,
+    email: false,
+    socials: [],
   },
-
-
 });
+

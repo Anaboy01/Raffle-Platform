@@ -4,27 +4,24 @@ import { useEffect, useMemo, useState } from "react";
 import { readOnlyProvider } from "../constants/readOnlyProvider";
 
 const useSignerOrProvider = () => {
-    const [signer, setSigner] = useState(null)
-    const [address, setAddress] = useState(null)
-    const { walletProvider} = useAppKitProvider()
+  const [signer, updateSigner] = useState();
+  const { walletProvider } = useAppKitProvider("eip155");
 
+  const provider = useMemo(
+    () => (walletProvider ? new BrowserProvider(walletProvider) : null),
+    [walletProvider]
+  );
 
-    const provider = useMemo(() => (
-        walletProvider ? new BrowserProvider(walletProvider) : null
-    ),[walletProvider])
+  useEffect(() => {
+    if (!provider) return updateSigner(null);
+    provider.getSigner().then((newSigner) => {
+      if (!newSigner) return updateSigner(newSigner);
+      if (newSigner.address === signer?.address) return;
+      updateSigner(newSigner);
+    });
+  }, [provider, signer]);
 
-    useEffect(() => {
-        if (provider) return setSigner(null);
-
-        provider.getSigner().then((newSigner) => {
-            if(!signer || newSigner.address !== signer.address) {
-                setSigner(newSigner);
-                setAddress(newSigner.address);
-            }
-        });
-    }, [provider, signer]);
-
-    return {signer, provider, address, readOnlyProvider}
-}
+  return { signer, provider, readOnlyProvider };
+};
 
 export default useSignerOrProvider;

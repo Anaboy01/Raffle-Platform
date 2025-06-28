@@ -198,6 +198,7 @@ export const RaffleContextProvider = ({ children }) => {
 
 
  useEffect(() => {
+   if (!address) return;
   const found = participants.some(addr => addr.toLowerCase() === address.toLowerCase());
     if(found){
       setIsAlreadyParticipating(true)

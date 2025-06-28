@@ -105,7 +105,7 @@ export const RaffleContextProvider = ({ children }) => {
   }, [getEntryFee]);
 
   const getRefund = useCallback(async () => {
-    if (!readOnlyRaffleContract) return;
+    if (!readOnlyRaffleContract || !address) return;
     try {
       const theRefunds = await readOnlyRaffleContract.getRefundAmount(address);
 

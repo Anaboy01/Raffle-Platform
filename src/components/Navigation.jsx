@@ -124,7 +124,7 @@ const Navigation = () => {
                 whileTap={{ scale: 0.98 }}
                 className="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
               >
-                Connect Wallet
+                 <appkit-button />
               </motion.button>
             </motion.div>
           )}

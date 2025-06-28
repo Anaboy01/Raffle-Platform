@@ -106,7 +106,7 @@ const HeroSection = () => {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
         >
-          <Link href="/raffle">
+          <Link to="/raffle">
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(168, 85, 247, 0.4)" }}
               whileTap={{ scale: 0.95 }}
